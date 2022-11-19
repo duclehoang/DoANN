@@ -1,15 +1,19 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.Element;
 import javax.swing.undo.UndoManager;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ClientGUI implements ActionListener {
     JFrame windown;
-    JTextArea jTextArea;
+    JTextArea jTextArea,lines;
     boolean WrapOn=false;
     JScrollPane jScrollPane;
     JMenuBar jMenuBar;
@@ -46,18 +50,21 @@ public class ClientGUI implements ActionListener {
     Function_Edit function_edit=new Function_Edit(this);
     UndoManager undoManager=new UndoManager();
     Function_Build function_build=new Function_Build(this);
+
     public  static  void main(String args[]){
         new ClientGUI();
     }
     public ClientGUI() {
        createWindown();
        createTextarea();
+        createLinesTexarea();
        createMenuber();
         createMenuFile();
         createColorMenu();
         createEditMenu();
         createFomatMenu();
         createMenuBuild();
+
 
 
         function_fomat.selectedFont="Arial";
@@ -68,18 +75,64 @@ public class ClientGUI implements ActionListener {
 
 
 
+
+
+
     }
+
+
 
     public  void createWindown(){
         windown=new JFrame("Editor Check And Excute Code");
         windown.setSize(800,600);
         windown.setIconImage(EditorIcon.getImage());
+        windown.setLocationRelativeTo(null);
         windown.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    }
+
+    public  void createLinesTexarea(){
+        jScrollPane = new JScrollPane();
+        jTextArea = new JTextArea();
+        lines = new JTextArea("1");
+        lines.setForeground(Color.RED);
+        lines.setFont(new Font("Arial",Font.BOLD,16));
+        lines.setBackground(Color.LIGHT_GRAY);
+        lines.setEditable(false);
+        //  Code to implement line numbers inside the JTextArea
+        jTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            public String getText() {
+                int caretPosition = jTextArea.getDocument().getLength();
+                Element root = jTextArea.getDocument().getDefaultRootElement();
+                String text = "1" + System.getProperty("line.separator");
+                for(int i = 2; i < root.getElementIndex(caretPosition) + 2; i++) {
+                    text += i + System.getProperty("line.separator");
+                }
+                return text;
+            }
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+        });
+        jScrollPane.getViewport().add(jTextArea);
+        jScrollPane.setRowHeaderView(lines);
+        windown.add(jScrollPane);
 
     }
 
     public void createTextarea(){
         jTextArea =new JTextArea();
+        jTextArea.setTabSize(30);
+
         jTextArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
             public void undoableEditHappened(UndoableEditEvent e) {
@@ -87,12 +140,19 @@ public class ClientGUI implements ActionListener {
             }
         });
 
+
+
+
+
         jScrollPane=new JScrollPane(jTextArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        //windown.add(jTextArea);
+        windown.add(jTextArea);
         jScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        windown.add(jScrollPane);
+       windown.add(jScrollPane);
 
     }
+
+
+
 
     public void createMenuBuild(){
 

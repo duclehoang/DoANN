@@ -1,6 +1,6 @@
 package GUI;
 
-public class Function_Build {
+public class Function_Build  {
     ClientGUI gui;
     public Function_Build(ClientGUI gui){
         this.gui=gui;
