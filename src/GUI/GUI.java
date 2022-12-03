@@ -76,6 +76,7 @@ public class GUI extends Component implements ActionListener {
     Function_Edit function_edit=new Function_Edit(this);
     UndoManager undoManager=new UndoManager();
     Function_Build function_build=new Function_Build(this);
+    OutPutFrame outPutFrame=new OutPutFrame();
 
     ClientGUI clientGUI=new ClientGUI();
     private InetAddress add;
@@ -120,6 +121,7 @@ public class GUI extends Component implements ActionListener {
         createEditMenu();
         createFomatMenu();
         createMenuBuild();
+
 
 
 
@@ -229,7 +231,14 @@ public class GUI extends Component implements ActionListener {
         windown.add(jScrollPane);
 
     }
+    public void createPanelOutput(){
+        JPanel output = new JPanel();
 
+        output.setSize(800,400);
+        output.setVisible(true);
+
+      windown.add(output);
+    }
 
 
     public void createTextarea(){
@@ -500,19 +509,25 @@ public class GUI extends Component implements ActionListener {
             case  "Python":function_build.ChangePythonProgramLanguage();
                 break;
             case  "Run":
-            JOptionPane.showMessageDialog(windown,"hello");
+            //JOptionPane.showMessageDialog(windown,"hello");
                System.out.println(commmand);
                  message= jTextArea.getText();
-                if (message.isEmpty()&&commmand.equals("Run")){
-                    JOptionPane.showMessageDialog(windown,"Nothing to run","Error",0);
-                }else {
+                if (message.isEmpty()&&commmand.equals("Run") || function_file.fileName==null){
+                    JOptionPane.showMessageDialog(windown,"Please save file before Run or Enter some thing your input","Error",0);
+                }
+
+                else {
                     if (ChkbJava.isSelected()&&commmand.equals("Run")) {
                         try {
-                            clientGUI.send(message,commmand);
+                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')));
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
-                        jTextArea.setText(clientGUI.recivece());
+                        outPutFrame.f.setVisible(true);
+                        outPutFrame.area.setForeground(Color.RED);
+                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,18));
+                        outPutFrame.area.setText(clientGUI.recivece());
+
                     }
                 }
                 break;
@@ -526,21 +541,21 @@ public class GUI extends Component implements ActionListener {
                 else {
                     if (ChkbJava.isSelected()&&commmand.equals("Fomat")) {
                         try {
-                            clientGUI.send(message,commmand);
+                            clientGUI.send(message,commmand, function_file.fileName);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
                     } else if (ChkbPython.isSelected()) {
                         try {
-                            clientGUI.send(message,commmand);
+                            clientGUI.send(message,commmand, function_file.fileName);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
                     } else if (ChkbPhp.isSelected()) {
                         try {
-                            clientGUI.send(message,commmand);
+                            clientGUI.send(message,commmand, function_file.fileName);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }

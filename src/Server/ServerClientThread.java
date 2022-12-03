@@ -1,6 +1,7 @@
 package Server;
 
 import GUI.GUI;
+import GUI.Function_file;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+
+import static org.fusesource.jansi.Ansi.Color.RED;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class ServerClientThread extends Thread {
     Socket serverClient;
@@ -24,12 +28,14 @@ public class ServerClientThread extends Thread {
         try{
             DataInputStream inStream = new DataInputStream(serverClient.getInputStream());
             DataOutputStream outStream = new DataOutputStream(serverClient.getOutputStream());
-            String clientMessage="", serverMessage="",command=" ",clientMessage1="";
+            String clientMessage="", serverMessage="",command=" ",clientMessage1="",clientMessage2=" ";
             while(!clientMessage.equals(" ")){
                 clientMessage=inStream.readUTF();
                 clientMessage1=inStream.readUTF();
+                clientMessage2=inStream.readUTF();
                 System.out.println("Day la "+clientMessage1);
                 System.out.println("Day la comand ben gui "+gui.itRun.getActionCommand());
+                System.out.println("Day la file name ben gui "+clientMessage2);
                // System.out.println("From Client-" +serverClient.getInetAddress()+ " :"+clientMessage);
              //   squre = Integer.parseInt(clientMessage) * Integer.parseInt(clientMessage);
                 if(gui.ChkbJava.isSelected()&&gui.itfomat.getActionCommand().equals(clientMessage1)){
@@ -44,8 +50,8 @@ public class ServerClientThread extends Thread {
                     serverMessage= FormaterC_PlusCode(clientMessage);
                 }
                 else if (gui.ChkbJava.isSelected()&&gui.itRun.getActionCommand().equals(clientMessage1)) {
-                    System.out.println("vbnm");
-                    serverMessage=validatecodeJava(clientMessage);
+                  //  System.out.println("vbnm");
+                    serverMessage=validatecodeJava(clientMessage,clientMessage2);
                 }
 
                 outStream.writeUTF(serverMessage);
@@ -103,56 +109,21 @@ public class ServerClientThread extends Thread {
         return code;
     }
 
-    public String validatecodeJava(String code){
-        System.out.println("hello em yeu");
+    public String validatecodeJava(String code,String filename) throws IOException {
+        Function_file function_file=new Function_file(gui);
+        String fname=function_file.fileName;
+      //  System.out.println("day la anme "+function_file.getFilename());
+        Document doc = Jsoup.connect("https://compiler.javatpoint.com/opr/run.jsp").ignoreContentType(true)
+                .data("val", code)
+                .data("filename",filename)
+                .data("args"," ")
+                .data("classname"," ").post();
 
-        String clientId = "8b3aa75339a0dfb71f8f2b4a3d0a8e29"; //Replace with your client ID
-        String clientSecret = "68477e8c080bce7fc5dbdc579fcfadd4fbdc1169a62c36d8e0868f0670cb9915"; //Replace with your client Secret
+        String tmp="// "+doc.body().select("div").first().text()+"\nResult:\n\n"+doc.body().select("p+p+div").text();
+        code=" ";
+        code=tmp;
 
-        String language = "java";
-        String versionIndex = "0";
-
-        try {
-            URL url = new URL("https://api.jdoodle.com/v1/execute");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            String input = "{\"clientId\": \"" + clientId + "\",\"clientSecret\":\"" + clientSecret + "\",\"script\":\"" + code +
-                    "\",\"language\":\"" + language + "\",\"versionIndex\":\"" + versionIndex + "\"} ";
-
-            System.out.println(input);
-
-            OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(input.getBytes());
-            outputStream.flush();
-
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Please check your inputs : HTTP error code : "+ connection.getResponseCode());
-            }
-
-            BufferedReader bufferedReader;
-            bufferedReader = new BufferedReader(new InputStreamReader(
-                    (connection.getInputStream())));
-
-            String output;
-            code=" ";
-            System.out.println("Output from JDoodle .... \n");
-            while ((output = bufferedReader.readLine()) != null) {
-                code=code+output;
-                System.out.println("day la out but "+ output);
-            }
-
-            connection.disconnect();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    return code;
+        return code;
     }
     //
 }

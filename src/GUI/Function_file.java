@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Function_file {
     GUI gui;
-    String fileName,fileAddress;
+    public  String fileName,fileAddress;
 
 
     public Function_file(GUI gui){
@@ -18,13 +18,14 @@ public class Function_file {
         fileName=null;
         fileAddress=null;
     }
+
     public void openFile(){
         FileDialog fileDialog=new FileDialog(gui.windown,"Open",FileDialog.LOAD);
         fileDialog.setVisible(true);
         if (fileDialog.getFile()!=null){
             fileName=fileDialog.getFile();
             fileAddress=fileDialog.getDirectory();
-            gui.windown.setTitle("filename");
+            gui.windown.setTitle(fileName.substring(0, fileName.lastIndexOf('.')));
 
         }
         try {
@@ -50,7 +51,7 @@ public class Function_file {
             try{
                 FileWriter fileWriter=new FileWriter(fileAddress + fileName);
                 fileWriter.write(gui.jTextArea.getText());
-                gui.windown.setTitle(fileName );
+                gui.windown.setTitle(fileName);
                 fileWriter.close();
 
             }catch (IOException e){
@@ -64,7 +65,17 @@ public class Function_file {
 
     public void saveAs(){
         FileDialog fileDialog=new FileDialog(gui.windown,"Save",FileDialog.SAVE);
+        fileDialog.setFilenameFilter(new FilenameFilter(){
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".java") || name.endsWith(".cpp")||name.endsWith(".py")||name.endsWith(".js");
+            }
+        });
+        fileDialog.setFile("Untitled");
         fileDialog.setVisible(true);
+
+
+
         if (fileDialog.getFile()!=null){
             fileName=fileDialog.getFile();
             fileAddress=fileDialog.getDirectory();
@@ -80,6 +91,9 @@ public class Function_file {
             System.out.println("SOMETHING WORONG");
 
         }
+    }
+    public String getFilename(){
+        return fileName;
     }
     public void exit(){
         System.exit(0);
