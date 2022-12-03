@@ -1,5 +1,9 @@
 package GUI;
 
+
+
+import Clientx.ClientGUI;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -10,14 +14,21 @@ import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.InetAddress;
 
-public class ClientGUI implements ActionListener {
+import static java.lang.Thread.sleep;
+
+public class GUI extends Component implements ActionListener {
     JFrame windown;
-    JTextArea jTextArea,lines;
+   public JTextArea jTextArea,lines;
+   public  String txtprt=" ",txtAdd=" ";
+
     boolean WrapOn=false;
     JScrollPane jScrollPane;
     JMenuBar jMenuBar;
-    JMenu menuFile,menuEdit,menuColor,menuFomat,menuBuild;
+    JMenu menuFile,menuEdit,menuColor,menuFomat,menuBuild,Conect_to_server;
     JMenuItem itNew,itOpen,itSave,ítSaveAs,itExit,itUndo,itRedo;
 
 
@@ -26,8 +37,11 @@ public class ClientGUI implements ActionListener {
 
     JMenuItem itColor1,itColor2,itColor3;
 
-    JMenuItem itRun,itfomat, itRunandFomat;
-    JRadioButtonMenuItem ChkbJava, ChkbPhp,ChkbJs,ChkbPython;
+    JMenuItem itRun,itfomat, itRunandFomat,itConnect;
+    public JRadioButtonMenuItem ChkbJava;
+    public JRadioButtonMenuItem ChkbPhp;
+    public JRadioButtonMenuItem ChkbJs;
+    public JRadioButtonMenuItem ChkbPython;
 
 
     ImageIcon ButtonIcon = new ImageIcon("src\\Images\\play_15px.png","Run the code");
@@ -51,10 +65,40 @@ public class ClientGUI implements ActionListener {
     UndoManager undoManager=new UndoManager();
     Function_Build function_build=new Function_Build(this);
 
-    public  static  void main(String args[]){
-        new ClientGUI();
+    ClientGUI clientGUI=new ClientGUI();
+    private InetAddress add;
+    JFrame panel;
+    public  static  void main(String args[]) throws InterruptedException, IOException {
+
+        new GUI();
     }
-    public ClientGUI() {
+
+    public JFrame getWindown() {
+        return windown;
+    }
+
+    public void setWindown(JFrame windown) {
+        this.windown = windown;
+    }
+
+    public String getTxtprt() {
+        return txtprt;
+    }
+
+    public void setTxtprt(String txtprt) {
+        this.txtprt = txtprt;
+    }
+
+    public String getTxtAdd() {
+        return txtAdd;
+    }
+
+    public void setTxtAdd(String txtAdd) {
+        this.txtAdd = txtAdd;
+    }
+
+    public GUI() throws InterruptedException, IOException {
+     connet();
        createWindown();
        createTextarea();
         createLinesTexarea();
@@ -67,11 +111,12 @@ public class ClientGUI implements ActionListener {
 
 
 
+
         function_fomat.selectedFont="Arial";
         function_fomat.creaFont(16);
         function_fomat.wordWrap();
         function_color.changeColor("white");
-       windown.setVisible(true);
+       windown.setVisible(false);
 
 
 
@@ -80,14 +125,58 @@ public class ClientGUI implements ActionListener {
 
     }
 
+    public void connet(){
+         panel=new JFrame();
+        panel.setLayout(new FlowLayout());
+        JLabel label=new JLabel("Server Host :");
+        JTextField txtAddress=new JTextField(13);
+        JLabel label1=new JLabel("Port :");
+        JTextField txtPort=new JTextField("1234");
+        JButton b =new JButton("Conect");
+        b.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource()==b){
+                    txtAdd=txtAddress.getText();
+                    txtprt=txtPort.getText();
+                    panel.setVisible(false);
+                    try {
+
+                        clientGUI.Connect(txtAddress.getText(),Integer.parseInt(txtPort.getText()));
+
+                        windown.setVisible(true);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
 
-    public  void createWindown(){
+                }
+            }
+        });
+        setTxtprt(txtPort.getText());
+        setTxtAdd(txtAddress.getText());
+        panel.add(label);
+        panel.add(txtAddress);
+        panel.add(label1);
+        panel.add(txtPort);
+        panel.add(b);
+        panel.setSize(320,100);
+        panel.setVisible(true);
+        panel.setLocationRelativeTo(null);
+        panel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+    }
+
+    public  void createWindown() throws InterruptedException {
+
         windown=new JFrame("Editor Check And Excute Code");
         windown.setSize(800,600);
         windown.setIconImage(EditorIcon.getImage());
         windown.setLocationRelativeTo(null);
         windown.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+
+
 
     }
 
@@ -128,6 +217,8 @@ public class ClientGUI implements ActionListener {
         windown.add(jScrollPane);
 
     }
+
+
 
     public void createTextarea(){
         jTextArea =new JTextArea();
@@ -170,6 +261,8 @@ public class ClientGUI implements ActionListener {
         itfomat.setActionCommand("Fomat");
         menuBuild.add(itfomat);
 
+
+
         itRunandFomat=new JMenuItem("Run & Fomat",ButtonIcon);
         itRunandFomat.addActionListener(this);
         itRunandFomat.setActionCommand("Run & Fomat");
@@ -181,14 +274,14 @@ public class ClientGUI implements ActionListener {
         ChkbJava.setActionCommand("Java");
         menuBuild.add(ChkbJava);
 
-        ChkbPhp=new JRadioButtonMenuItem("PHP");
+        ChkbPhp=new JRadioButtonMenuItem("Javascript");
         ChkbPhp.addActionListener(this);
-        ChkbPhp.setActionCommand("PHP");
+        ChkbPhp.setActionCommand("Javascript");
         menuBuild.add(ChkbPhp);
 
-        ChkbJs=new JRadioButtonMenuItem("JavaScript");
+        ChkbJs=new JRadioButtonMenuItem("C++");
         ChkbJs.addActionListener(this);
-        ChkbJs.setActionCommand("JavaScript");
+        ChkbJs.setActionCommand("C++");
         menuBuild.add(ChkbJs);
 
         ChkbPython=new JRadioButtonMenuItem("Python");
@@ -209,7 +302,15 @@ public class ClientGUI implements ActionListener {
         jMenuBar.add(menuColor);
         menuBuild=new JMenu("Build");
         jMenuBar.add(menuBuild);
+//        Conect_to_server=new JMenu("Connect Server");
+//        jMenuBar.add(Conect_to_server);
 
+    }
+    public void createMenuConnect(){
+        itConnect=new JMenuItem("Enter Port");
+        itConnect.addActionListener(this);
+        itConnect.setActionCommand("Enter Port");
+        Conect_to_server.add(itConnect);
     }
     public  void createMenuFile(){
         itNew=new JMenuItem("New",NewIcon);
@@ -327,6 +428,10 @@ public class ClientGUI implements ActionListener {
 
     }
 
+    private void itfomatMouseClicked (MouseEvent evt){
+        JOptionPane.showMessageDialog(GUI.this,"hello");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String commmand=e.getActionCommand();
@@ -373,13 +478,52 @@ public class ClientGUI implements ActionListener {
                 break;
             case  "Java":function_build.ChangeJavaProgramLanguage();
                 break;
-            case  "PHP":function_build.ChangePHPProgramLanguage();
+            case  "Javascript":function_build.ChangePHPProgramLanguage();
                 break;
-            case  "JavaScript":function_build.ChangeJSProgramLanguage();
+            case  "C++":function_build.ChangeJSProgramLanguage();
                 break;
             case  "Python":function_build.ChangePythonProgramLanguage();
                 break;
+            case  "Fomat":
+                String message= jTextArea.getText();
+
+                if (ChkbJava.isSelected()){
+                    try {
+                        clientGUI.send(message);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    jTextArea.setText(clientGUI.recivece());
+                } else if (ChkbPython.isSelected()) {
+                    try {
+                        clientGUI.send(message);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    jTextArea.setText(clientGUI.recivece());
+                }else if (ChkbPhp.isSelected()) {
+                    try {
+                        clientGUI.send(message);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    jTextArea.setText(clientGUI.recivece());
+                }
+
+
+                break;
+
+
         }
 
     }
+    public void Fonmater_Code() throws IOException, InterruptedException {
+
+
+
+
+//            System.out.println("hello ne !");
+
+
+}
 }

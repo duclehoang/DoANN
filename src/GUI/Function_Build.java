@@ -1,12 +1,24 @@
 package GUI;
 
-public class Function_Build  {
-    ClientGUI gui;
-    public Function_Build(ClientGUI gui){
-        this.gui=gui;
+
+
+import Clientx.ClientGUI;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+
+import java.io.IOException;
+
+
+public class Function_Build {
+    GUI gui;
+    ClientGUI clientGUI = new ClientGUI();
+
+    public Function_Build(GUI gui) throws IOException, InterruptedException {
+        this.gui = gui;
     }
 
-    public void ChangeJavaProgramLanguage(){
+    public void ChangeJavaProgramLanguage() {
         if (gui.ChkbJava.isSelected()) {
             gui.ChkbPython.setSelected(false);
             gui.ChkbJs.setSelected(false);
@@ -17,8 +29,8 @@ public class Function_Build  {
 
     }
 
-    public void ChangePHPProgramLanguage(){
-         if (gui.ChkbPhp.isSelected()) {
+    public void ChangePHPProgramLanguage() {
+        if (gui.ChkbPhp.isSelected()) {
             gui.ChkbPython.setSelected(false);
             gui.ChkbJava.setSelected(false);
             gui.ChkbJs.setSelected(false);
@@ -26,8 +38,8 @@ public class Function_Build  {
         }
     }
 
-    public void ChangeJSProgramLanguage(){
-         if (gui.ChkbJs.isSelected()) {
+    public void ChangeJSProgramLanguage() {
+        if (gui.ChkbJs.isSelected()) {
             gui.ChkbPython.setSelected(false);
             gui.ChkbJava.setSelected(false);
             gui.ChkbPhp.setSelected(false);
@@ -35,12 +47,14 @@ public class Function_Build  {
         }
 
     }
-    public void ChangePythonProgramLanguage(){
-             if (gui.ChkbPython.isSelected()) {
+
+    public void ChangePythonProgramLanguage() {
+        if (gui.ChkbPython.isSelected()) {
             gui.ChkbPhp.setSelected(false);
             gui.ChkbJava.setSelected(false);
             gui.ChkbJs.setSelected(false);
 
         }
     }
+
 }

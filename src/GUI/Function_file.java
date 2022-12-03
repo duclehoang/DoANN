@@ -4,11 +4,11 @@ import java.awt.*;
 import java.io.*;
 
 public class Function_file {
-    ClientGUI gui;
+    GUI gui;
     String fileName,fileAddress;
 
 
-    public Function_file(ClientGUI gui){
+    public Function_file(GUI gui){
         this.gui=gui;
 
     }

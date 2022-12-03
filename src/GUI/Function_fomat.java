@@ -3,11 +3,11 @@ package GUI;
 import java.awt.*;
 
 public class Function_fomat {
-    ClientGUI gui;
+    GUI gui;
     Font arial,comícanMS,timeNewRoman;
     String selectedFont;
 
-    public Function_fomat(ClientGUI gui){
+    public Function_fomat(GUI gui){
         this.gui=gui;
     }
     public void wordWrap(){

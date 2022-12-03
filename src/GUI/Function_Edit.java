@@ -1,10 +1,10 @@
 package GUI;
 
 public class Function_Edit {
-    ClientGUI gui;
+    GUI gui;
 
 
-    public Function_Edit (ClientGUI gui) {
+    public Function_Edit (GUI gui) {
        this.gui=gui;
     }
     public  void Undo(){

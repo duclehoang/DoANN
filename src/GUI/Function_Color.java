@@ -3,8 +3,8 @@ package GUI;
 import java.awt.*;
 
 public class Function_Color {
-    ClientGUI gui;
-    public Function_Color(ClientGUI gui){
+    GUI gui;
+    public Function_Color(GUI gui){
         this.gui=gui;
     }
 
