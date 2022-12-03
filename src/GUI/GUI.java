@@ -32,12 +32,21 @@ public class GUI extends Component implements ActionListener {
     JMenuItem itNew,itOpen,itSave,ítSaveAs,itExit,itUndo,itRedo;
 
     public String commmand=" ";
+
+    public String getCommmand() {
+        return commmand;
+    }
+
+    public void setCommmand(String commmand) {
+        this.commmand = commmand;
+    }
+
     JMenuItem itWrap,itFontArial,itFontCSMS,itFontTNR,itFontSize8,itFontSize12,ItFontSize16,ItFontSize20,ItFontSize24,ItFontSize28;
     JMenu menuFont,menuFontSize;
 
     JMenuItem itColor1,itColor2,itColor3;
 
-    JMenuItem itRun;
+    public JMenuItem itRun;
     public JMenuItem itfomat;
     JMenuItem itRunandFomat;
     JMenuItem itConnect;
@@ -437,7 +446,10 @@ public class GUI extends Component implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String message=" ";
         commmand=e.getActionCommand();
+        setCommmand(commmand);
+        System.out.println(getCommmand()+"get comand");
         switch (commmand){
             case "New":function_file.newFile();
             break;
@@ -489,33 +501,46 @@ public class GUI extends Component implements ActionListener {
                 break;
             case  "Run":
             JOptionPane.showMessageDialog(windown,"hello");
-                System.out.println(commmand);
+               System.out.println(commmand);
+                 message= jTextArea.getText();
+                if (message.isEmpty()&&commmand.equals("Run")){
+                    JOptionPane.showMessageDialog(windown,"Nothing to run","Error",0);
+                }else {
+                    if (ChkbJava.isSelected()&&commmand.equals("Run")) {
+                        try {
+                            clientGUI.send(message,commmand);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        jTextArea.setText(clientGUI.recivece());
+                    }
+                }
                 break;
             case  "Fomat":
                 System.out.println(commmand);
-                String message= jTextArea.getText();
+                 message= jTextArea.getText();
                 System.out.println(message);
-                if (message.isEmpty()){
+                if (message.isEmpty()&&commmand.equals("Fomat")){
                     JOptionPane.showMessageDialog(windown,"Nothing to fomat","Error",0);
                 }
                 else {
-                    if (ChkbJava.isSelected()) {
+                    if (ChkbJava.isSelected()&&commmand.equals("Fomat")) {
                         try {
-                            clientGUI.send(message);
+                            clientGUI.send(message,commmand);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
                     } else if (ChkbPython.isSelected()) {
                         try {
-                            clientGUI.send(message);
+                            clientGUI.send(message,commmand);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
                     } else if (ChkbPhp.isSelected()) {
                         try {
-                            clientGUI.send(message);
+                            clientGUI.send(message,commmand);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }

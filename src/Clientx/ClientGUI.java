@@ -27,20 +27,20 @@ public class ClientGUI {
 
     }
 
-    public void send(String sms) throws IOException {
+    public void send(String sms,String command) throws IOException {
 
         DataOutputStream outStream = null;
         try {
 
             outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String clientMessage = "", serverMessage = "";
+            String clientMessage = "", serverMessage = "",clientMessage1=" ";
 
             // System.out.println("Enter number :");
             clientMessage = sms;
-           // clientMessage1 = command;
+            clientMessage1 = command;
             outStream.writeUTF(clientMessage);
-          //  outStream.writeUTF(clientMessage1);
+            outStream.writeUTF(clientMessage1);
             outStream.flush();
 
 

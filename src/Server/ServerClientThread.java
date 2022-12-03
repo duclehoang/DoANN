@@ -27,24 +27,26 @@ public class ServerClientThread extends Thread {
             String clientMessage="", serverMessage="",command=" ",clientMessage1="";
             while(!clientMessage.equals(" ")){
                 clientMessage=inStream.readUTF();
-               // clientMessage1=inStream.readUTF();
+                clientMessage1=inStream.readUTF();
                 System.out.println("Day la "+clientMessage1);
-                System.out.println("Day la comand ben gui "+gui.itfomat.getActionCommand());
+                System.out.println("Day la comand ben gui "+gui.itRun.getActionCommand());
                // System.out.println("From Client-" +serverClient.getInetAddress()+ " :"+clientMessage);
              //   squre = Integer.parseInt(clientMessage) * Integer.parseInt(clientMessage);
-                if(gui.ChkbJava.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")){
+                if(gui.ChkbJava.isSelected()&&gui.itfomat.getActionCommand().equals(clientMessage1)){
+                    System.out.println("java fomater");
                     serverMessage= FormaterJavaCode(clientMessage);
-                } else if (gui.ChkbPython.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
+                } else if (gui.ChkbPython.isSelected()&&gui.itfomat.getActionCommand().equals(clientMessage1)) {
                     serverMessage= FormaterPythonCode(clientMessage);
-                } else if (gui.ChkbPhp.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
+                } else if (gui.ChkbPhp.isSelected()&&gui.itfomat.getActionCommand().equals(clientMessage1)) {
                     serverMessage= FormaterJavaScriptCode(clientMessage);
                 }
-                else if (gui.ChkbJs.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
+                else if (gui.ChkbJs.isSelected()&&gui.itfomat.getActionCommand().equals(clientMessage1)) {
                     serverMessage= FormaterC_PlusCode(clientMessage);
                 }
-//                else if (gui.ChkbJava.isSelected()&&gui.commmand.equals("Run")) {
-//                    serverMessage=validatecodeJava(clientMessage);
-//                }
+                else if (gui.ChkbJava.isSelected()&&gui.itRun.getActionCommand().equals(clientMessage1)) {
+                    System.out.println("vbnm");
+                    serverMessage=validatecodeJava(clientMessage);
+                }
 
                 outStream.writeUTF(serverMessage);
                 outStream.flush();
@@ -102,6 +104,7 @@ public class ServerClientThread extends Thread {
     }
 
     public String validatecodeJava(String code){
+        System.out.println("hello em yeu");
 
         String clientId = "8b3aa75339a0dfb71f8f2b4a3d0a8e29"; //Replace with your client ID
         String clientSecret = "68477e8c080bce7fc5dbdc579fcfadd4fbdc1169a62c36d8e0868f0670cb9915"; //Replace with your client Secret
@@ -138,7 +141,7 @@ public class ServerClientThread extends Thread {
             System.out.println("Output from JDoodle .... \n");
             while ((output = bufferedReader.readLine()) != null) {
                 code=code+output;
-                System.out.println(output);
+                System.out.println("day la out but "+ output);
             }
 
             connection.disconnect();
