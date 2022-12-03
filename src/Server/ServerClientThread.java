@@ -5,10 +5,11 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 
 public class ServerClientThread extends Thread {
     Socket serverClient;
@@ -23,21 +24,27 @@ public class ServerClientThread extends Thread {
         try{
             DataInputStream inStream = new DataInputStream(serverClient.getInputStream());
             DataOutputStream outStream = new DataOutputStream(serverClient.getOutputStream());
-            String clientMessage="", serverMessage="";
+            String clientMessage="", serverMessage="",command=" ",clientMessage1="";
             while(!clientMessage.equals(" ")){
                 clientMessage=inStream.readUTF();
+               // clientMessage1=inStream.readUTF();
+                System.out.println("Day la "+clientMessage1);
+                System.out.println("Day la comand ben gui "+gui.itfomat.getActionCommand());
                // System.out.println("From Client-" +serverClient.getInetAddress()+ " :"+clientMessage);
              //   squre = Integer.parseInt(clientMessage) * Integer.parseInt(clientMessage);
-                if(gui.ChkbJava.isSelected()){
+                if(gui.ChkbJava.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")){
                     serverMessage= FormaterJavaCode(clientMessage);
-                } else if (gui.ChkbPython.isSelected()) {
+                } else if (gui.ChkbPython.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
                     serverMessage= FormaterPythonCode(clientMessage);
-                } else if (gui.ChkbPhp.isSelected()) {
+                } else if (gui.ChkbPhp.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
                     serverMessage= FormaterJavaScriptCode(clientMessage);
                 }
-                else if (gui.ChkbJs.isSelected()) {
+                else if (gui.ChkbJs.isSelected()&&gui.itfomat.getActionCommand().equals("Fomat")) {
                     serverMessage= FormaterC_PlusCode(clientMessage);
                 }
+//                else if (gui.ChkbJava.isSelected()&&gui.commmand.equals("Run")) {
+//                    serverMessage=validatecodeJava(clientMessage);
+//                }
 
                 outStream.writeUTF(serverMessage);
                 outStream.flush();
@@ -92,6 +99,57 @@ public class ServerClientThread extends Thread {
         code=tmp;
         //  System.out.println(code);
         return code;
+    }
+
+    public String validatecodeJava(String code){
+
+        String clientId = "8b3aa75339a0dfb71f8f2b4a3d0a8e29"; //Replace with your client ID
+        String clientSecret = "68477e8c080bce7fc5dbdc579fcfadd4fbdc1169a62c36d8e0868f0670cb9915"; //Replace with your client Secret
+
+        String language = "java";
+        String versionIndex = "0";
+
+        try {
+            URL url = new URL("https://api.jdoodle.com/v1/execute");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            String input = "{\"clientId\": \"" + clientId + "\",\"clientSecret\":\"" + clientSecret + "\",\"script\":\"" + code +
+                    "\",\"language\":\"" + language + "\",\"versionIndex\":\"" + versionIndex + "\"} ";
+
+            System.out.println(input);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(input.getBytes());
+            outputStream.flush();
+
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Please check your inputs : HTTP error code : "+ connection.getResponseCode());
+            }
+
+            BufferedReader bufferedReader;
+            bufferedReader = new BufferedReader(new InputStreamReader(
+                    (connection.getInputStream())));
+
+            String output;
+            code=" ";
+            System.out.println("Output from JDoodle .... \n");
+            while ((output = bufferedReader.readLine()) != null) {
+                code=code+output;
+                System.out.println(output);
+            }
+
+            connection.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    return code;
     }
     //
 }

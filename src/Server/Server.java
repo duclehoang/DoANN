@@ -27,7 +27,7 @@ ConnectServer connect=new ConnectServer();
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource()==b){
-                    JOptionPane.showMessageDialog(serverGui,"Connect success","Thông báo kết nối",0);
+                    JOptionPane.showMessageDialog(serverGui,"Connect success","Thông báo kết nối",1);
 
 
                     connect.connectServer(Integer.parseInt(jTextField.getText()));

@@ -31,13 +31,16 @@ public class GUI extends Component implements ActionListener {
     JMenu menuFile,menuEdit,menuColor,menuFomat,menuBuild,Conect_to_server;
     JMenuItem itNew,itOpen,itSave,ítSaveAs,itExit,itUndo,itRedo;
 
-
+    public String commmand=" ";
     JMenuItem itWrap,itFontArial,itFontCSMS,itFontTNR,itFontSize8,itFontSize12,ItFontSize16,ItFontSize20,ItFontSize24,ItFontSize28;
     JMenu menuFont,menuFontSize;
 
     JMenuItem itColor1,itColor2,itColor3;
 
-    JMenuItem itRun,itfomat, itRunandFomat,itConnect;
+    JMenuItem itRun;
+    public JMenuItem itfomat;
+    JMenuItem itRunandFomat;
+    JMenuItem itConnect;
     public JRadioButtonMenuItem ChkbJava;
     public JRadioButtonMenuItem ChkbPhp;
     public JRadioButtonMenuItem ChkbJs;
@@ -434,7 +437,7 @@ public class GUI extends Component implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String commmand=e.getActionCommand();
+        commmand=e.getActionCommand();
         switch (commmand){
             case "New":function_file.newFile();
             break;
@@ -484,33 +487,42 @@ public class GUI extends Component implements ActionListener {
                 break;
             case  "Python":function_build.ChangePythonProgramLanguage();
                 break;
+            case  "Run":
+            JOptionPane.showMessageDialog(windown,"hello");
+                System.out.println(commmand);
+                break;
             case  "Fomat":
+                System.out.println(commmand);
                 String message= jTextArea.getText();
-
-                if (ChkbJava.isSelected()){
-                    try {
-                        clientGUI.send(message);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    jTextArea.setText(clientGUI.recivece());
-                } else if (ChkbPython.isSelected()) {
-                    try {
-                        clientGUI.send(message);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    jTextArea.setText(clientGUI.recivece());
-                }else if (ChkbPhp.isSelected()) {
-                    try {
-                        clientGUI.send(message);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    jTextArea.setText(clientGUI.recivece());
+                System.out.println(message);
+                if (message.isEmpty()){
+                    JOptionPane.showMessageDialog(windown,"Nothing to fomat","Error",0);
                 }
+                else {
+                    if (ChkbJava.isSelected()) {
+                        try {
+                            clientGUI.send(message);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        jTextArea.setText(clientGUI.recivece());
+                    } else if (ChkbPython.isSelected()) {
+                        try {
+                            clientGUI.send(message);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        jTextArea.setText(clientGUI.recivece());
+                    } else if (ChkbPhp.isSelected()) {
+                        try {
+                            clientGUI.send(message);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        jTextArea.setText(clientGUI.recivece());
+                    }
 
-
+                }
                 break;
 
 

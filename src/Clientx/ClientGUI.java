@@ -38,7 +38,9 @@ public class ClientGUI {
 
             // System.out.println("Enter number :");
             clientMessage = sms;
+           // clientMessage1 = command;
             outStream.writeUTF(clientMessage);
+          //  outStream.writeUTF(clientMessage1);
             outStream.flush();
 
 
