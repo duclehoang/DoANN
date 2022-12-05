@@ -20,9 +20,9 @@ public class ClientGUI {
     public Socket socket = null;
 
 
-
     public void Connect(String host, int port) throws IOException {
         socket = new Socket(host, destPort);
+
 
 
     }

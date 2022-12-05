@@ -17,10 +17,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 
-public class GUI extends Component implements ActionListener {
+public class GUI extends Component implements ActionListener,Runnable{
     JFrame windown;
    public JTextArea jTextArea,lines;
    public  String txtprt=" ",txtAdd=" ";
@@ -42,13 +43,13 @@ public class GUI extends Component implements ActionListener {
     }
 
     JMenuItem itWrap,itFontArial,itFontCSMS,itFontTNR,itFontSize8,itFontSize12,ItFontSize16,ItFontSize20,ItFontSize24,ItFontSize28;
-    JMenu menuFont,menuFontSize;
+    JMenu menuFont,menuFontSize,MenuZoom;
 
-    JMenuItem itColor1,itColor2,itColor3;
+    JMenuItem itColor1,itColor2,itColor3,ZoomOut,ZoomIn;
 
     public JMenuItem itRun;
     public JMenuItem itfomat;
-    JMenuItem itRunandFomat;
+    public JMenuItem itRunandFomat;
     JMenuItem itConnect;
     public JRadioButtonMenuItem ChkbJava;
     public JRadioButtonMenuItem ChkbCSharp;
@@ -56,6 +57,8 @@ public class GUI extends Component implements ActionListener {
     public JRadioButtonMenuItem ChkbPython;
 
     Image Jtextthem;
+    JFrame jFrameProgressbar;
+    JProgressBar progressBar;
 
 
     ImageIcon ButtonIcon = new ImageIcon("src\\Images\\play_15px.png","Run the code");
@@ -70,7 +73,7 @@ public class GUI extends Component implements ActionListener {
     ImageIcon ExitIcon=new ImageIcon("src\\Images\\exit_sign_15px.png");
     ImageIcon EditorIcon=new ImageIcon("src\\Images\\edit_20px.png");
 
-
+    static JProgressBar jProgressBar;
 
     Function_file function_file=new Function_file(this);
     Function_fomat function_fomat=new Function_fomat(this);
@@ -79,6 +82,7 @@ public class GUI extends Component implements ActionListener {
     UndoManager undoManager=new UndoManager();
     Function_Build function_build=new Function_Build(this);
     OutPutFrame outPutFrame=new OutPutFrame();
+
 
     ClientGUI clientGUI=new ClientGUI();
     private InetAddress add;
@@ -113,7 +117,11 @@ public class GUI extends Component implements ActionListener {
     }
 
     public GUI() throws InterruptedException, IOException {
+
+      //  f.f.setVisible(false);
+        new ProgressBar();
      connet();
+
        createWindown();
        createTextarea();
         createLinesTexarea();
@@ -142,7 +150,7 @@ public class GUI extends Component implements ActionListener {
     }
 
     public void connet(){
-         panel=new JFrame();
+         panel=new JFrame("Client Connect");
         panel.setLayout(new FlowLayout());
         JLabel label=new JLabel("Server Host :");
         JTextField txtAddress=new JTextField(13);
@@ -153,6 +161,7 @@ public class GUI extends Component implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource()==b){
+
                     txtAdd=txtAddress.getText();
                     txtprt=txtPort.getText();
                     panel.setVisible(false);
@@ -179,9 +188,11 @@ public class GUI extends Component implements ActionListener {
         panel.setSize(320,100);
         panel.setVisible(true);
         panel.setLocationRelativeTo(null);
-        panel.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        panel.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     }
+
+
 
     public  void createWindown() throws InterruptedException {
 
@@ -246,6 +257,8 @@ public class GUI extends Component implements ActionListener {
     public void createTextarea(){
         jTextArea =new JTextArea();
         jTextArea.setTabSize(30);
+        jTextArea.setDragEnabled(true);
+        jTextArea.setEditable(false);
 
         jTextArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
@@ -288,7 +301,7 @@ public class GUI extends Component implements ActionListener {
 
         itRunandFomat=new JMenuItem("Run & Fomat",ButtonIcon);
         itRunandFomat.addActionListener(this);
-        itRunandFomat.setActionCommand("Run & Fomat");
+        itRunandFomat.setActionCommand("Run_Fomat");
         menuBuild.add(itRunandFomat);
 
 
@@ -386,6 +399,19 @@ public class GUI extends Component implements ActionListener {
         menuFont=new JMenu("Font");
         menuFomat.add(menuFont);
 
+        MenuZoom=new JMenu("Zoom");
+
+
+        ZoomIn=new JMenuItem("Zoom In");
+        ZoomIn.addActionListener(this);
+        ZoomIn.setActionCommand("ZoomIn");
+        MenuZoom.add(ZoomIn);
+
+        ZoomOut=new JMenuItem("Zoom Out");
+        ZoomOut.addActionListener(this);
+        ZoomOut.setActionCommand("ZoomOut");
+        MenuZoom.add(ZoomOut);
+
         itFontArial=new JMenuItem("Arial");
         itFontArial.addActionListener(this);
         itFontArial.setActionCommand("Arial");
@@ -435,6 +461,26 @@ public class GUI extends Component implements ActionListener {
         ItFontSize28.setActionCommand("size28");
         menuFontSize.add(ItFontSize28);
 
+        JMenuItem ItFontSize32 = new JMenuItem("32");
+        ItFontSize32.addActionListener(this);
+        ItFontSize32.setActionCommand("size32");
+        menuFontSize.add(ItFontSize32);
+
+        JMenuItem ItFontSize36 = new JMenuItem("36");
+        ItFontSize36.addActionListener(this);
+        ItFontSize36.setActionCommand("size36");
+        menuFontSize.add(ItFontSize36);
+
+        JMenuItem ItFontSize40 = new JMenuItem("40");
+        ItFontSize40.addActionListener(this);
+        ItFontSize40.setActionCommand("size40");
+        menuFontSize.add(ItFontSize40);
+
+        JMenuItem ItFontSize44 = new JMenuItem("44");
+        ItFontSize44.addActionListener(this);
+        ItFontSize44.setActionCommand("size44");
+        menuFontSize.add(ItFontSize44);
+
 
     }
     public void createEditMenu(){
@@ -475,6 +521,56 @@ public class GUI extends Component implements ActionListener {
 
         return sms;
     }
+
+    public  boolean create_ProgressBar(){
+        jFrameProgressbar=new JFrame();
+        // create a panel
+        // create a progressbar
+        progressBar = new JProgressBar();
+        progressBar.setBackground(Color.white);
+        progressBar.setForeground(new Color(212, 71, 67));
+        // set initial value
+
+        progressBar.setValue(0);
+        progressBar.setFont(new Font("Arial", Font.BOLD,16));
+        progressBar.setStringPainted(true);
+        jFrameProgressbar.add(progressBar);
+
+        // add progressbar
+        jFrameProgressbar.setLocationRelativeTo(null);
+
+
+        jFrameProgressbar.setBounds(390,240,420,100);
+
+        jFrameProgressbar.setUndecorated(true);
+        jFrameProgressbar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        jFrameProgressbar.setVisible(true);
+        fill();
+        return true;
+    }
+    public void fill(){
+        jFrameProgressbar.setVisible(true);
+        int i = 0;
+        try {
+            while (i <= 100) {
+                // set text accoring to the level to which the bar is filled
+                if (i > 30 && i < 70)
+                    progressBar.setString("wait for sometime");
+                else if (i > 70)
+                    progressBar.setString("almost finished loading");
+                else
+                    progressBar.setString("loading started");
+                // fill the menu bar
+                progressBar.setValue(i + 10);
+                // delay the thread
+                Thread.sleep(100);
+                i += 2;
+            }
+            jFrameProgressbar.setVisible(true);
+        } catch (Exception e) {
+        }
+    }
+
     private void itfomatMouseClicked (MouseEvent evt){
         JOptionPane.showMessageDialog(GUI.this,"hello");
     }
@@ -484,9 +580,11 @@ public class GUI extends Component implements ActionListener {
         String message=" ";
         commmand=e.getActionCommand();
         setCommmand(commmand);
-        System.out.println(getCommmand()+"get comand");
+        System.out.println(getCommmand()+" get comand");
+
         switch (commmand){
             case "New":function_file.newFile();
+
             break;
             case  "Open":function_file.openFile();
             break;
@@ -514,6 +612,14 @@ public class GUI extends Component implements ActionListener {
                 break;
             case  "size28":function_fomat.creaFont(28);
                 break;
+            case  "size32":function_fomat.creaFont(32);
+                break;
+            case  "size36":function_fomat.creaFont(36);
+                break;
+            case  "size40":function_fomat.creaFont(40);
+                break;
+            case  "size44":function_fomat.creaFont(44);
+                break;
             case  "Arial":function_fomat.setFont(commmand);
                 break;
             case  "Comic Sans MS":function_fomat.setFont(commmand);
@@ -535,88 +641,173 @@ public class GUI extends Component implements ActionListener {
                 break;
             case  "Python":function_build.ChangePythonProgramLanguage();
                 break;
-            case  "Run":
-            //JOptionPane.showMessageDialog(windown,"hello");
+            case  "Run_Fomat":
 
-               //System.out.println(commmand);
-                 message= jTextArea.getText();
-             //   System.out.println(Covert(message));
+
+
+                message= jTextArea.getText();
                 outPutFrame.area.setText(" ");
-                if (!ChkbJava.isSelected()&&!ChkbPython.isSelected()&&!ChkbC_CPP.isSelected()&!ChkbCSharp.isSelected()){
-                    JOptionPane.showMessageDialog(windown,"Please choose programing language need execute","Error choose programming language",0);
-                    return;
-                }
-                else if (message.isEmpty()&&commmand.equals("Run") ){
-                    JOptionPane.showMessageDialog(windown,"Please save file before Run and Enter some thing your input","Error",0);
-                    return;
-                }
-               else if ( function_file.fileName==null){
-                    JOptionPane.showMessageDialog(windown,"Please save file before Run","Error",0);
-                    return;
-                }
 
-                else {
-                    if (ChkbJava.isSelected()&&commmand.equals("Run")) {
-                        try {
-                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+
+
+
+
+
+                    if (!ChkbJava.isSelected() && !ChkbPython.isSelected() && !ChkbC_CPP.isSelected() && !ChkbCSharp.isSelected()) {
+                        JOptionPane.showMessageDialog(windown, "Please choose programing language need execute", "Error choose programming language", 0);
+                        return;
+                    } else if (message.isEmpty() && commmand.equals("Run_Fomat")) {
+                        JOptionPane.showMessageDialog(windown, "Nothing to fomat", "Error", 0);
+                        return;
+                    } else if (function_file.fileName == null) {
+                        JOptionPane.showMessageDialog(windown, "Please save file before Run", "Error", 0);
+                        return;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Foamter and Run code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+                        if (ChkbJava.isSelected() && commmand.equals("Run_Fomat")) {
+
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            jTextArea.setText(clientGUI.recivece());
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
+                        } else if (ChkbPython.isSelected() && commmand.equals("Run_Fomat")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            jTextArea.setText(clientGUI.recivece());
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
+                        } else if (ChkbC_CPP.isSelected() && commmand.equals("Run_Fomat")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            jTextArea.setText(clientGUI.recivece());
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
+                        } else if (ChkbCSharp.isSelected() && commmand.equals("Run_Fomat")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            jTextArea.setText(clientGUI.recivece());
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
                         }
-                        outPutFrame.f.setVisible(true);
-                        outPutFrame.area.setForeground(Color.RED);
-                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,18));
-                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
-
-                    }else if (ChkbPython.isSelected()&&commmand.equals("Run")) {
-                        try {
-                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        outPutFrame.f.setVisible(true);
-                        outPutFrame.area.setForeground(Color.RED);
-                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
-                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
-
                     }
-                    else if (ChkbC_CPP.isSelected()&&commmand.equals("Run")) {
-                        try {
-                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        outPutFrame.f.setVisible(true);
-                        outPutFrame.area.setForeground(Color.RED);
-                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
-                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
 
-                    }
-                    else if (ChkbCSharp.isSelected()&&commmand.equals("Run")) {
-                        try {
-                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        outPutFrame.f.setVisible(true);
-                        outPutFrame.area.setForeground(Color.RED);
-                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
-                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
 
-                    }
+                break;
+            case  "Run":
+
+                    // JOptionPane.showMessageDialog(windown,"The program Run succes !","Run Program",1);
+
+                    //System.out.println(commmand);
+                    message = jTextArea.getText();
+                    //   System.out.println(Covert(message));
+                    outPutFrame.area.setText(" ");
+                    if (!ChkbJava.isSelected() && !ChkbPython.isSelected() && !ChkbC_CPP.isSelected() & !ChkbCSharp.isSelected()) {
+                        JOptionPane.showMessageDialog(null,"Please choose programing language need execute","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
+                        return;
+                    } else if (message.isEmpty() && commmand.equals("Run")) {
+                        JOptionPane.showMessageDialog(null,"Please Enter your input","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
+                        return;
+                    } else if (function_file.fileName == null) {
+                        JOptionPane.showMessageDialog(null,"Please save file before Run or Formatter","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
+                        return;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Run code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+
+                        if (ChkbJava.isSelected() && commmand.equals("Run")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+
+                            outPutFrame.f.setVisible(true);
+
+                        } else if (ChkbPython.isSelected() && commmand.equals("Run")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+
+                            outPutFrame.f.setVisible(true);
+
+                        } else if (ChkbC_CPP.isSelected() && commmand.equals("Run")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
+
+                        } else if (ChkbCSharp.isSelected() && commmand.equals("Run")) {
+                            try {
+                                clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            outPutFrame.area.setForeground(Color.BLACK);
+                            outPutFrame.area.setFont(new Font("Arial", Font.BOLD, 18));
+                            outPutFrame.area.setText("Result: \n\n" + clientGUI.recivece());
+                            outPutFrame.f.setVisible(true);
+
+                        }
+
+
                 }
                 break;
             case  "Fomat":
                // System.out.println(commmand);
+
                  message= jTextArea.getText();
                 System.out.println(message);
                 if (!ChkbJava.isSelected()&&!ChkbPython.isSelected()&&!ChkbC_CPP.isSelected()&&!ChkbCSharp.isSelected()){
-                    JOptionPane.showMessageDialog(windown,"Please choose programing language need execute","Error choose programming language",0);
+                    JOptionPane.showMessageDialog(null,"Please choose programing language need execute","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
                     return;
                 }else if (message.isEmpty()&&commmand.equals("Fomat")){
-                    JOptionPane.showMessageDialog(windown,"Nothing to fomat","Error",0);
+                    JOptionPane.showMessageDialog(null,"Nothing Formatter Code","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
                     return;
                 }
                 else {
+                //    JOptionPane.showMessageDialog(windown,"The program Run succes !","Run Program",1);
+                    JOptionPane.showMessageDialog(null, "Formatter code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
                     if (ChkbJava.isSelected()&&commmand.equals("Fomat")) {
                         try {
                             clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
@@ -658,7 +849,12 @@ public class GUI extends Component implements ActionListener {
 
         }
 
+
+    @Override
+    public void run() {
+        new ProgressBar();
     }
+}
 
 
 

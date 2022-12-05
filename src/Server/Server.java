@@ -21,12 +21,12 @@ ConnectServer connect=new ConnectServer();
         JFrame serverGui=new JFrame("Server");
 
         JTextField jTextField=new JTextField("1234",20);
-        JButton b=new JButton("Listen");
-        b.setSize(100,50);
-        b.addActionListener(new ActionListener() {
+        JButton bu=new JButton("Listen");
+        bu.setSize(100,50);
+        bu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (e.getSource()==b){
+                if (e.getSource()==bu){
                     JOptionPane.showMessageDialog(serverGui,"Connect success","Thông báo kết nối",1);
 
 
@@ -38,7 +38,7 @@ ConnectServer connect=new ConnectServer();
         });
 
         serverGui.add(jTextField);
-        serverGui.add(b);
+        serverGui.add(bu);
         serverGui.setSize(290,100);
         serverGui.setLayout(new FlowLayout());
         serverGui.setLocationRelativeTo(null);

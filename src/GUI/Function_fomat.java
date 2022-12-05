@@ -44,7 +44,15 @@ public class Function_fomat {
             case  "Times New Roman":
                 gui.jTextArea.setFont(timeNewRoman);
                 break;
+            case  "ZoomIn":
+                gui.jTextArea.setFont(arial);
+                break;
+            case  "ZoomOut":
+                gui.jTextArea.setFont(arial);
+                break;
         }
 
     }
+
+
 }

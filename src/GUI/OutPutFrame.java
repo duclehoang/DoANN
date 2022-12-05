@@ -16,6 +16,7 @@ public class OutPutFrame {
        area = new TextArea();
         area.setBounds(4, 20, 780, 240);
         area.setEditable(false);
+        area.setBackground(new Color(193, 141, 106));
         f.setTitle("Out Put");
         f.add(area);
       //  f.setLocationRelativeTo(null);

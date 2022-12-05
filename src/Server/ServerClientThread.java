@@ -72,6 +72,39 @@ public class ServerClientThread extends Thread {
                     System.out.println("CSharp validate");
                     serverMessage=validatecodeCSharp(clientMessage);
                 }
+                else if (clientMessage3.equals("JavaIsSelected")&&gui.itRunandFomat.getActionCommand().equals(clientMessage1)) {
+                    System.out.println("Java fomater and validate");
+                    String serverMessage1=FormaterJavaCode(clientMessage);
+                   serverMessage=validatecodeJava(serverMessage1,clientMessage2);
+                    outStream.writeUTF(serverMessage1);
+                    outStream.flush();
+
+                }
+                else if (clientMessage3.equals("PythonIsSelected")&&gui.itRunandFomat.getActionCommand().equals(clientMessage1)) {
+                    System.out.println("Python fomater and validate");
+                    String serverMessage1=FormaterPythonCode(clientMessage);
+                    serverMessage=validatecodePython(serverMessage1);
+                    outStream.writeUTF(serverMessage1);
+                    outStream.flush();
+
+                }
+                else if (clientMessage3.equals("CPPsSelected")&&gui.itRunandFomat.getActionCommand().equals(clientMessage1)) {
+                    System.out.println("C++ fomater and validate");
+                    String serverMessage1=FormaterC_PlusCode(clientMessage);
+                    serverMessage=validatecodeCPP(serverMessage1);
+                    outStream.writeUTF(serverMessage1);
+                    outStream.flush();
+
+                }
+                else if (clientMessage3.equals("CSharpIsSelected")&&gui.itRunandFomat.getActionCommand().equals(clientMessage1)) {
+                    System.out.println("C# fomater and validate");
+                    String serverMessage1=FormaterCSharpCode(clientMessage);
+                    serverMessage=validatecodeCSharp(serverMessage1);
+                    outStream.writeUTF(serverMessage1);
+                    outStream.flush();
+
+                }
+
 
                 outStream.writeUTF(serverMessage);
                 outStream.flush();
@@ -83,6 +116,7 @@ public class ServerClientThread extends Thread {
         }catch(Exception ex){
             //System.out.println(ex);
         }
+
     }
     public String FormaterJavaCode(String code) throws IOException {
         Document doc = Jsoup.connect("https://www.10bestdesign.com/dirtymarkup/api/js").ignoreContentType(true).
@@ -117,13 +151,15 @@ public class ServerClientThread extends Thread {
     }
 
     public String FormaterC_PlusCode(String code) throws IOException {
-        Document doc = Jsoup.connect("https://tools.tutorialspoint.com/format_c.php").ignoreContentType(true).
-                data("code",code).post();
-        JSONObject jsonObject=new JSONObject(doc.text());
-        String  tmp= (String) jsonObject.get("code");
+        Document doc = Jsoup.connect("http://format.krzaq.cc/").ignoreContentType(true).
+                data("code",code)
+                .data("style","file")
+                .post();
+
+
+        String  tmp= doc.body().getElementById("data").text();
         code=" ";
         code=tmp;
-        System.out.println(code);
         return code;
     }
 
@@ -157,7 +193,7 @@ public class ServerClientThread extends Thread {
                 .data("args"," ")
                 .data("classname"," ").post();
 
-        String tmp="// "+doc.body().select("div").first().text()+doc.body().select("p+p+div").text();
+        String tmp=doc.body().select("p+p+div").text();
         code=" ";
         code=tmp;
 
