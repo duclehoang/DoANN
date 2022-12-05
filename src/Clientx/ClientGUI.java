@@ -27,7 +27,7 @@ public class ClientGUI {
 
     }
 
-    public void send(String sms,String command,String filename) throws IOException {
+    public void send(String sms,String command,String filename,String selected) throws IOException {
 
         DataOutputStream outStream = null;
         try {
@@ -35,18 +35,21 @@ public class ClientGUI {
             outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String clientMessage = "", serverMessage = "",clientMessage1=" ",clientMessage2=" ";
+            String clientMessage3;
 
             // System.out.println("Enter number :");
             clientMessage = sms;
             clientMessage1 = command;
             clientMessage2 =filename;
+            clientMessage3 =selected;
             outStream.writeUTF(clientMessage);
             outStream.writeUTF(clientMessage1);
             outStream.writeUTF(clientMessage2);
+            outStream.writeUTF(clientMessage3);
             outStream.flush();
 
 
-            System.out.println(sms + " from send");
+           // System.out.println(clientMessage3 + " from send");
 
         } catch (Exception e) {
             System.out.println(e);
@@ -63,7 +66,7 @@ public class ClientGUI {
 
             inStream = new DataInputStream(socket.getInputStream());
             sms = inStream.readUTF();
-            System.out.println(sms);
+           // System.out.println(sms);
 
         } catch (Exception evt) {
             System.out.println(evt);

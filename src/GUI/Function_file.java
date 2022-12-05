@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 
 public class Function_file {
-    GUI gui;
+   GUI gui;
     public  String fileName,fileAddress;
 
 
@@ -51,7 +51,7 @@ public class Function_file {
             try{
                 FileWriter fileWriter=new FileWriter(fileAddress + fileName);
                 fileWriter.write(gui.jTextArea.getText());
-                gui.windown.setTitle(fileName);
+                gui.windown.setTitle(fileName.substring(0, fileName.lastIndexOf('.')));
                 fileWriter.close();
 
             }catch (IOException e){
@@ -79,7 +79,7 @@ public class Function_file {
         if (fileDialog.getFile()!=null){
             fileName=fileDialog.getFile();
             fileAddress=fileDialog.getDirectory();
-            gui.windown.setTitle(fileName);
+            gui.windown.setTitle(fileName.substring(0, fileName.lastIndexOf('.')));
 
         }
         try {

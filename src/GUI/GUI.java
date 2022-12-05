@@ -51,9 +51,11 @@ public class GUI extends Component implements ActionListener {
     JMenuItem itRunandFomat;
     JMenuItem itConnect;
     public JRadioButtonMenuItem ChkbJava;
-    public JRadioButtonMenuItem ChkbPhp;
-    public JRadioButtonMenuItem ChkbJs;
+    public JRadioButtonMenuItem ChkbCSharp;
+    public JRadioButtonMenuItem ChkbC_CPP;
     public JRadioButtonMenuItem ChkbPython;
+
+    Image Jtextthem;
 
 
     ImageIcon ButtonIcon = new ImageIcon("src\\Images\\play_15px.png","Run the code");
@@ -290,20 +292,20 @@ public class GUI extends Component implements ActionListener {
         menuBuild.add(itRunandFomat);
 
 
-        ChkbJava=new JRadioButtonMenuItem("Java",true);
+        ChkbJava=new JRadioButtonMenuItem("Java");
         ChkbJava.addActionListener(this);
         ChkbJava.setActionCommand("Java");
         menuBuild.add(ChkbJava);
 
-        ChkbPhp=new JRadioButtonMenuItem("Javascript");
-        ChkbPhp.addActionListener(this);
-        ChkbPhp.setActionCommand("Javascript");
-        menuBuild.add(ChkbPhp);
+        ChkbCSharp=new JRadioButtonMenuItem("C#");
+        ChkbCSharp.addActionListener(this);
+        ChkbCSharp.setActionCommand("CS");
+        menuBuild.add(ChkbCSharp);
 
-        ChkbJs=new JRadioButtonMenuItem("C++");
-        ChkbJs.addActionListener(this);
-        ChkbJs.setActionCommand("C++");
-        menuBuild.add(ChkbJs);
+        ChkbC_CPP=new JRadioButtonMenuItem("C++");
+        ChkbC_CPP.addActionListener(this);
+        ChkbC_CPP.setActionCommand("C++");
+        menuBuild.add(ChkbC_CPP);
 
         ChkbPython=new JRadioButtonMenuItem("Python");
         ChkbPython.addActionListener(this);
@@ -360,17 +362,17 @@ public class GUI extends Component implements ActionListener {
         menuFile.add(itExit);
     }
     public void createColorMenu(){
-        itColor1=new JMenuItem("White");
+        itColor1=new JMenuItem("Blue smooth");
         itColor1.addActionListener(this);
         itColor1.setActionCommand("White");
         menuColor.add(itColor1);
 
-        itColor2=new JMenuItem("Black");
+        itColor2=new JMenuItem("Dark green");
         itColor2.addActionListener(this);
         itColor2.setActionCommand("Black");
         menuColor.add(itColor2);
 
-        itColor3=new JMenuItem("Blue");
+        itColor3=new JMenuItem("Purple Rise");
         itColor3.addActionListener(this);
         itColor3.setActionCommand("Blue");
         menuColor.add(itColor3);
@@ -449,6 +451,30 @@ public class GUI extends Component implements ActionListener {
 
     }
 
+
+    public String Covert(String t){
+
+        t= t.replace("\n", "").replace(" ", "");
+        System.out.println(t);
+        return t;
+    }
+    public String CheckSelected( )  {
+        String sms=" ";
+        if (ChkbJava.isSelected()){
+            sms="JavaIsSelected";
+        } else if (ChkbPython.isSelected()) {
+            sms="PythonIsSelected";
+        } else if (ChkbC_CPP.isSelected()) {
+            sms="CPPsSelected";
+        } else if (ChkbCSharp.isSelected()) {
+            sms="CSharpIsSelected";
+        }
+
+
+//            System.out.println("hello ne !");
+
+        return sms;
+    }
     private void itfomatMouseClicked (MouseEvent evt){
         JOptionPane.showMessageDialog(GUI.this,"hello");
     }
@@ -501,61 +527,121 @@ public class GUI extends Component implements ActionListener {
             case  "Blue":function_color.changeColor(commmand);
                 break;
             case  "Java":function_build.ChangeJavaProgramLanguage();
+
                 break;
-            case  "Javascript":function_build.ChangePHPProgramLanguage();
+            case  "CS":function_build.ChangeCSharpProgramLanguage();
                 break;
-            case  "C++":function_build.ChangeJSProgramLanguage();
+            case  "C++":function_build.ChangeC_CPProgramLanguage();
                 break;
             case  "Python":function_build.ChangePythonProgramLanguage();
                 break;
             case  "Run":
             //JOptionPane.showMessageDialog(windown,"hello");
-               System.out.println(commmand);
+
+               //System.out.println(commmand);
                  message= jTextArea.getText();
-                if (message.isEmpty()&&commmand.equals("Run") || function_file.fileName==null){
-                    JOptionPane.showMessageDialog(windown,"Please save file before Run or Enter some thing your input","Error",0);
+             //   System.out.println(Covert(message));
+                outPutFrame.area.setText(" ");
+                if (!ChkbJava.isSelected()&&!ChkbPython.isSelected()&&!ChkbC_CPP.isSelected()&!ChkbCSharp.isSelected()){
+                    JOptionPane.showMessageDialog(windown,"Please choose programing language need execute","Error choose programming language",0);
+                    return;
+                }
+                else if (message.isEmpty()&&commmand.equals("Run") ){
+                    JOptionPane.showMessageDialog(windown,"Please save file before Run and Enter some thing your input","Error",0);
+                    return;
+                }
+               else if ( function_file.fileName==null){
+                    JOptionPane.showMessageDialog(windown,"Please save file before Run","Error",0);
+                    return;
                 }
 
                 else {
                     if (ChkbJava.isSelected()&&commmand.equals("Run")) {
                         try {
-                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')));
+                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         outPutFrame.f.setVisible(true);
                         outPutFrame.area.setForeground(Color.RED);
                         outPutFrame.area.setFont(new Font("Arial", Font.BOLD,18));
-                        outPutFrame.area.setText(clientGUI.recivece());
+                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
+
+                    }else if (ChkbPython.isSelected()&&commmand.equals("Run")) {
+                        try {
+                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        outPutFrame.f.setVisible(true);
+                        outPutFrame.area.setForeground(Color.RED);
+                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
+                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
+
+                    }
+                    else if (ChkbC_CPP.isSelected()&&commmand.equals("Run")) {
+                        try {
+                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        outPutFrame.f.setVisible(true);
+                        outPutFrame.area.setForeground(Color.RED);
+                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
+                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
+
+                    }
+                    else if (ChkbCSharp.isSelected()&&commmand.equals("Run")) {
+                        try {
+                            clientGUI.send(message,commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')),CheckSelected());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        outPutFrame.f.setVisible(true);
+                        outPutFrame.area.setForeground(Color.RED);
+                        outPutFrame.area.setFont(new Font("Arial", Font.BOLD,14));
+                        outPutFrame.area.setText("Result: \n\n"+clientGUI.recivece());
 
                     }
                 }
                 break;
             case  "Fomat":
-                System.out.println(commmand);
+               // System.out.println(commmand);
                  message= jTextArea.getText();
                 System.out.println(message);
-                if (message.isEmpty()&&commmand.equals("Fomat")){
+                if (!ChkbJava.isSelected()&&!ChkbPython.isSelected()&&!ChkbC_CPP.isSelected()&&!ChkbCSharp.isSelected()){
+                    JOptionPane.showMessageDialog(windown,"Please choose programing language need execute","Error choose programming language",0);
+                    return;
+                }else if (message.isEmpty()&&commmand.equals("Fomat")){
                     JOptionPane.showMessageDialog(windown,"Nothing to fomat","Error",0);
+                    return;
                 }
                 else {
                     if (ChkbJava.isSelected()&&commmand.equals("Fomat")) {
                         try {
-                            clientGUI.send(message,commmand, function_file.fileName);
+                            clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
                     } else if (ChkbPython.isSelected()) {
                         try {
-                            clientGUI.send(message,commmand, function_file.fileName);
+                            clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         jTextArea.setText(clientGUI.recivece());
-                    } else if (ChkbPhp.isSelected()) {
+                    } else if (ChkbCSharp.isSelected()) {
                         try {
-                            clientGUI.send(message,commmand, function_file.fileName);
+                            clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        jTextArea.setText(clientGUI.recivece());
+                    }
+                    else if (ChkbC_CPP.isSelected()) {
+                        try {
+                            clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -565,17 +651,14 @@ public class GUI extends Component implements ActionListener {
                 }
                 break;
 
+                }
+
+
+
 
         }
 
     }
-    public void Fonmater_Code() throws IOException, InterruptedException {
 
 
 
-
-//            System.out.println("hello ne !");
-
-
-}
-}

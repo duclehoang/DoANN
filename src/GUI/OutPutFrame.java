@@ -19,7 +19,7 @@ public class OutPutFrame {
         f.setTitle("Out Put");
         f.add(area);
       //  f.setLocationRelativeTo(null);
-        f.setBounds(400,240,800, 300);
+        f.setBounds(390,240,800, 300);
         f.setLayout(null);
         f.setResizable(false);
         f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
