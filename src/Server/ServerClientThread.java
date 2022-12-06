@@ -78,7 +78,7 @@ public class ServerClientThread extends Thread {
                     System.out.println("Java fomater and validate");
                     String serverMessage1=FormaterJavaCode(clientMessage);
                    serverMessage=validatecodeJava(serverMessage1,clientMessage2);
-                    outStream.writeUTF(serverMessage1);
+                    outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage1));
                     outStream.flush();
 
                 }
@@ -86,7 +86,7 @@ public class ServerClientThread extends Thread {
                     System.out.println("Python fomater and validate");
                     String serverMessage1=FormaterPythonCode(clientMessage);
                     serverMessage=validatecodePython(serverMessage1);
-                    outStream.writeUTF(serverMessage1);
+                    outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage1));
                     outStream.flush();
 
                 }
@@ -94,7 +94,7 @@ public class ServerClientThread extends Thread {
                     System.out.println("C++ fomater and validate");
                     String serverMessage1=FormaterC_PlusCode(clientMessage);
                     serverMessage=validatecodeCPP(serverMessage1);
-                    outStream.writeUTF(serverMessage1);
+                    outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage1));
                     outStream.flush();
 
                 }
@@ -102,13 +102,14 @@ public class ServerClientThread extends Thread {
                     System.out.println("C# fomater and validate");
                     String serverMessage1=FormaterCSharpCode(clientMessage);
                     serverMessage=validatecodeCSharp(serverMessage1);
-                    outStream.writeUTF(serverMessage1);
+                    outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage1));
                     outStream.flush();
 
                 }
 
 
                 outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage));
+                System.out.println("Server ma hoa du lieu: "+securityKeyPairGenerator.MaHoaDuLieu(serverMessage));
                 outStream.flush();
                // System.out.println(serverMessage);
             }
