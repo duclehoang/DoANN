@@ -3,18 +3,18 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class ProgressBar implements Runnable {
+public class ProgressbarNotify implements Runnable {
     public static JFrame f;
     public static JProgressBar b;
 
-    public ProgressBar() {
+    public ProgressbarNotify() {
         // create a frame
         f=new JFrame();
         // create a panel
         // create a progressbar
         b = new JProgressBar();
         b.setBackground(Color.white);
-        b.setForeground(new Color(212, 71, 67));
+        b.setForeground(new Color(69, 211, 70));
         // set initial value
 
         b.setValue(0);
@@ -26,8 +26,7 @@ public class ProgressBar implements Runnable {
         f.setLocationRelativeTo(null);
 
 
-       f.setBounds(550,360,520,70);
-       // f.setSize(520,70);
+        f.setBounds(450,340,520,50);
 
         f.setUndecorated(true);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -48,16 +47,16 @@ public class ProgressBar implements Runnable {
             while (i <= 100) {
                 // set text accoring to the level to which the bar is filled
                 if (i > 30 && i < 70)
-                    b.setString(i+"%"+" Loading......");
+                    b.setString(i+"%"+" Please Wait");
                 else if (i > 70)
-                    b.setString(i+"%"+" Almost Loading Finished");
+                    b.setString(i+"%"+" Success");
                 else
-                    b.setString(i+"%"+" Program Stated");
+                    b.setString(i+"%"+" Execute Started ");
                 // fill the menu bar
                 b.setValue(i + 10);
                 // delay the thread
-                Thread.sleep(1000);
-                i += 20;
+                Thread.sleep(50);
+                i += 2;
             }
             f.setVisible(false);
         } catch (Exception e) {
@@ -70,11 +69,3 @@ public class ProgressBar implements Runnable {
         new ProgressBar();
     }
 }
-
-
-
-
-
-
-
-

@@ -5,6 +5,7 @@ package GUI;
 import Clientx.ClientGUI;
 import RSA.SecurityKeyPairGenerator;
 
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,7 +20,9 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
+import static java.lang.Thread.interrupted;
 import static java.lang.Thread.sleep;
 
 public class GUI extends Component implements ActionListener,Runnable{
@@ -159,21 +162,42 @@ public class GUI extends Component implements ActionListener,Runnable{
         JLabel label1=new JLabel("Port :");
         JTextField txtPort=new JTextField("1234");
         JButton b =new JButton("Conect");
+        String checkAddressInput="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        String CheckPortInput="^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$";
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource()==b){
+                    if (txtAddress.getText().isEmpty()&&txtPort.getText().isEmpty()){
+                        JOptionPane.showMessageDialog(panel,"Please enter your Adrress or port");
+                    } else if (txtAddress.getText().isEmpty()||txtPort.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(panel,"Please enter your Adrress or port");
+                    } else if (!Pattern.matches(checkAddressInput,txtAddress.getText())) {
+                        JOptionPane.showMessageDialog(panel,"The ip address is not true, please enter again !");
+                    } else if (!Pattern.matches(CheckPortInput,txtPort.getText())) {
+                        JOptionPane.showMessageDialog(panel,"The port is not true, please enter again !");
+                    }
+                    else {
+                        txtAdd=txtAddress.getText();
+                        txtprt=txtPort.getText();
 
-                    txtAdd=txtAddress.getText();
-                    txtprt=txtPort.getText();
-                    panel.setVisible(false);
-                    try {
+                        try {
 
-                        clientGUI.Connect(txtAddress.getText(),Integer.parseInt(txtPort.getText()));
+                            if (clientGUI.Connect(txtAddress.getText(),Integer.parseInt(txtPort.getText()))==true){
 
-                        windown.setVisible(true);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                                windown.setVisible(true);
+                                panel.setVisible(false);
+                                panel.dispose();
+                                //clientGUI.close();
+                            }
+
+
+
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, "Connect failed please try again !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+
+                        }
+
                     }
 
 
@@ -647,7 +671,7 @@ public class GUI extends Component implements ActionListener,Runnable{
             case  "Run_Fomat":
 
 
-                securityKeyPairGenerator.taohaikhoa();
+
                 message= jTextArea.getText();
                 outPutFrame.area.setText(" ");
 
@@ -667,6 +691,13 @@ public class GUI extends Component implements ActionListener,Runnable{
                         return;
                     } else {
                         JOptionPane.showMessageDialog(null, "Foamter and Run code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                securityKeyPairGenerator.taohaikhoa();
+
+                            }
+                        }).start();
                         if (ChkbJava.isSelected() && commmand.equals("Run_Fomat")) {
 
                             try {
@@ -722,8 +753,16 @@ public class GUI extends Component implements ActionListener,Runnable{
 
                 break;
             case  "Run":
-                securityKeyPairGenerator.taohaikhoa();
+
                     // JOptionPane.showMessageDialog(windown,"The program Run succes !","Run Program",1);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        securityKeyPairGenerator.taohaikhoa();
+
+
+                    }
+                }).start();
 
                     //System.out.println(commmand);
                     message = jTextArea.getText();
@@ -739,11 +778,16 @@ public class GUI extends Component implements ActionListener,Runnable{
                         JOptionPane.showMessageDialog(null,"Please save file before Run or Formatter","Error choose programming language",JOptionPane.ERROR_MESSAGE,new ImageIcon("src\\Images\\error_30px.png"));
                         return;
                     } else {
+
                         JOptionPane.showMessageDialog(null, "Run code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+
+
+
 
                         if (ChkbJava.isSelected() && commmand.equals("Run")) {
                             try {
                                 clientGUI.send(message, commmand, function_file.fileName.substring(0, function_file.fileName.lastIndexOf('.')), CheckSelected());
+
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -798,7 +842,7 @@ public class GUI extends Component implements ActionListener,Runnable{
                 break;
             case  "Fomat":
                // System.out.println(commmand);
-                securityKeyPairGenerator.taohaikhoa();
+
 
                  message= jTextArea.getText();
                 System.out.println(message);
@@ -811,7 +855,41 @@ public class GUI extends Component implements ActionListener,Runnable{
                 }
                 else {
                 //    JOptionPane.showMessageDialog(windown,"The program Run succes !","Run Program",1);
-                    JOptionPane.showMessageDialog(null, "Formatter code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+                   JOptionPane.showMessageDialog(null, "Formatter code succes !", "Dive", JOptionPane.OK_OPTION, new ImageIcon("src\\Images\\ok_30px.png"));
+//
+//
+//                    JOptionPane msg = new JOptionPane("Mensagem de advertência", JOptionPane.UNDEFINED_CONDITION);
+//                    final JDialog dlg = msg.createDialog("Advertência");
+//                    dlg.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+//                    dlg.setEnabled(false);
+//
+//
+//
+//
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                Thread.sleep(5000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                            dlg.setVisible(false);
+//                        }
+//                    }).start();
+//                    dlg.setVisible(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            securityKeyPairGenerator.taohaikhoa();
+                            //new ProgressbarNotify();
+
+                        }
+                    }).start();
+
+
+
                     if (ChkbJava.isSelected()&&commmand.equals("Fomat")) {
                         try {
                             clientGUI.send(message,commmand, function_file.fileName,CheckSelected());
@@ -844,10 +922,12 @@ public class GUI extends Component implements ActionListener,Runnable{
                     }
 
                 }
+
                 break;
+            default:
 
+                break;
                 }
-
 
 
 

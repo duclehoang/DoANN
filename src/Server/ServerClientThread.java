@@ -62,7 +62,7 @@ public class ServerClientThread extends Thread {
                 else if (clientMessage3.equals("JavaIsSelected")&&gui.itRun.getActionCommand().equals(clientMessage1)) {
                   //  System.out.println("vbnm");
                     System.out.println("Java validate");
-                    serverMessage=validatecodeJava(clientMessage,clientMessage2);
+                 serverMessage=validatecodeJava(clientMessage);
                 }else if (clientMessage3.equals("PythonIsSelected")&&gui.itRun.getActionCommand().equals(clientMessage1)) {
                       System.out.println("Python validate");
                     serverMessage=validatecodePython(clientMessage);
@@ -77,7 +77,7 @@ public class ServerClientThread extends Thread {
                 else if (clientMessage3.equals("JavaIsSelected")&&gui.itRunandFomat.getActionCommand().equals(clientMessage1)) {
                     System.out.println("Java fomater and validate");
                     String serverMessage1=FormaterJavaCode(clientMessage);
-                   serverMessage=validatecodeJava(serverMessage1,clientMessage2);
+                   serverMessage=validatecodeJava(serverMessage1);
                     outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage1));
                     outStream.flush();
 
@@ -187,7 +187,7 @@ public class ServerClientThread extends Thread {
         return code;
     }
 
-    public String validatecodeJava(String code,String filename) throws IOException {
+    public String validatecodeJava(String code) throws IOException {
 
         Function_file function_file=new Function_file(gui);
         Document doc = Jsoup.connect("https://try.w3schools.com/try_java.php?x=0.36483332864662255").ignoreContentType(true)

@@ -22,10 +22,16 @@ public class ClientGUI {
   SecurityKeyPairGenerator securityKeyPairGenerator=new SecurityKeyPairGenerator();
 
 
-    public void Connect(String host, int port) throws IOException {
+    public boolean Connect(String host, int port) throws IOException {
+        boolean flag=false;
         socket = new Socket(host, destPort);
+        System.out.println("thong tin connect client : "+socket.isConnected());
+        if (socket.isConnected()){
+            flag=true;
 
+        }
 
+    return flag;
 
     }
 

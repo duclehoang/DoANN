@@ -19,7 +19,7 @@ public class SecurityKeyPairGenerator {
             // Độ dài khóa 1024(bits), độ dài khóa này quyết định đến độ an toàn của khóa, càng lớn thì càng an toàn
             // Demo chỉ sử dụng 1024 bit. Nhưng theo khuyến cáo thì độ dài khóa nên tối thiểu là 2048
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(1024, sr);
+            kpg.initialize(8192, sr);
 
             // Khởi tạo cặp khóa
             KeyPair kp = kpg.genKeyPair();
