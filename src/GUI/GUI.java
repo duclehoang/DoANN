@@ -3,6 +3,7 @@ package GUI;
 
 
 import Clientx.ClientGUI;
+import RSA.SecurityKeyPairGenerator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -82,7 +83,7 @@ public class GUI extends Component implements ActionListener,Runnable{
     UndoManager undoManager=new UndoManager();
     Function_Build function_build=new Function_Build(this);
     OutPutFrame outPutFrame=new OutPutFrame();
-
+    SecurityKeyPairGenerator securityKeyPairGenerator=new SecurityKeyPairGenerator();
 
     ClientGUI clientGUI=new ClientGUI();
     private InetAddress add;
@@ -646,7 +647,7 @@ public class GUI extends Component implements ActionListener,Runnable{
             case  "Run_Fomat":
 
 
-
+                securityKeyPairGenerator.taohaikhoa();
                 message= jTextArea.getText();
                 outPutFrame.area.setText(" ");
 
@@ -721,7 +722,7 @@ public class GUI extends Component implements ActionListener,Runnable{
 
                 break;
             case  "Run":
-
+                securityKeyPairGenerator.taohaikhoa();
                     // JOptionPane.showMessageDialog(windown,"The program Run succes !","Run Program",1);
 
                     //System.out.println(commmand);
@@ -797,6 +798,7 @@ public class GUI extends Component implements ActionListener,Runnable{
                 break;
             case  "Fomat":
                // System.out.println(commmand);
+                securityKeyPairGenerator.taohaikhoa();
 
                  message= jTextArea.getText();
                 System.out.println(message);

@@ -5,6 +5,7 @@ package Clientx;
 
 
 import GUI.GUI;
+import RSA.SecurityKeyPairGenerator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class ClientGUI {
     public int destPort = 1234;
     public String host = "localhost";
     public Socket socket = null;
+  SecurityKeyPairGenerator securityKeyPairGenerator=new SecurityKeyPairGenerator();
 
 
     public void Connect(String host, int port) throws IOException {
@@ -42,14 +44,14 @@ public class ClientGUI {
             clientMessage1 = command;
             clientMessage2 =filename;
             clientMessage3 =selected;
-            outStream.writeUTF(clientMessage);
+            outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(clientMessage));
             outStream.writeUTF(clientMessage1);
             outStream.writeUTF(clientMessage2);
             outStream.writeUTF(clientMessage3);
             outStream.flush();
 
 
-           // System.out.println(clientMessage3 + " from send");
+            System.out.println(securityKeyPairGenerator.MaHoaDuLieu(clientMessage) + " from send");
 
         } catch (Exception e) {
             System.out.println(e);
@@ -65,8 +67,8 @@ public class ClientGUI {
 
 
             inStream = new DataInputStream(socket.getInputStream());
-            sms = inStream.readUTF();
-           // System.out.println(sms);
+            sms = securityKeyPairGenerator.giaiMa(inStream.readUTF());
+            System.out.println("client nhan du lieu da duoc giai ma tu server : "+sms);
 
         } catch (Exception evt) {
             System.out.println(evt);

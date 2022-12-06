@@ -2,6 +2,7 @@ package Server;
 
 import GUI.GUI;
 import GUI.Function_file;
+import RSA.SecurityKeyPairGenerator;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,6 +17,7 @@ public class ServerClientThread extends Thread {
     int clientNo;
     int squre;
     GUI gui=new GUI();
+    SecurityKeyPairGenerator  securityKeyPairGenerator=new SecurityKeyPairGenerator();
     public ServerClientThread(Socket inSocket, int counter) throws IOException, InterruptedException {
         serverClient = inSocket;
         clientNo=counter;
@@ -27,15 +29,15 @@ public class ServerClientThread extends Thread {
             String clientMessage="", serverMessage="",command=" ",clientMessage1="",clientMessage2=" ", clientMessage3=" ";
 
             while(!clientMessage.equals(" ")){
-                clientMessage=inStream.readUTF();
+                clientMessage=securityKeyPairGenerator.giaiMa(inStream.readUTF());
                 clientMessage1=inStream.readUTF();
                 clientMessage2=inStream.readUTF();
                 clientMessage3=inStream.readUTF();
 
 
-                System.out.println(clientMessage3+ " form server");
+                System.out.println(clientMessage+ " form server");
 
-                System.out.println("Day la "+clientMessage1);
+              //  System.out.println("Day la "+clientMessage1);
               //  System.out.println("Day la comand ben gui "+gui.itRun.getActionCommand());
               //  System.out.println("Day la file name ben gui "+clientMessage2);
                // System.out.println("From Client-" +serverClient.getInetAddress()+ " :"+clientMessage);
@@ -106,7 +108,7 @@ public class ServerClientThread extends Thread {
                 }
 
 
-                outStream.writeUTF(serverMessage);
+                outStream.writeUTF(securityKeyPairGenerator.MaHoaDuLieu(serverMessage));
                 outStream.flush();
                // System.out.println(serverMessage);
             }
