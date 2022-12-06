@@ -26,7 +26,7 @@ public class ProgressBar implements Runnable {
         f.setLocationRelativeTo(null);
 
 
-        f.setBounds(600,350,520,70);
+        f.setBounds(550,360,520,70);
 
         f.setUndecorated(true);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

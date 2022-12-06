@@ -140,6 +140,7 @@ public class GUI extends Component implements ActionListener,Runnable{
         function_fomat.creaFont(16);
         function_fomat.wordWrap();
         function_color.changeColor("white");
+        windown.setExtendedState(JFrame.MAXIMIZED_BOTH);
        windown.setVisible(false);
 
 
@@ -186,6 +187,7 @@ public class GUI extends Component implements ActionListener,Runnable{
         panel.add(txtPort);
         panel.add(b);
         panel.setSize(320,100);
+        panel.setResizable(false);
         panel.setVisible(true);
         panel.setLocationRelativeTo(null);
         panel.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

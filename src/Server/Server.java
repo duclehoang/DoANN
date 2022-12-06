@@ -27,6 +27,7 @@ ConnectServer connect=new ConnectServer();
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource()==bu){
+                    serverGui.setVisible(false);
                     JOptionPane.showMessageDialog(serverGui,"Connect success","Thông báo kết nối",1);
 
 
@@ -43,6 +44,7 @@ ConnectServer connect=new ConnectServer();
         serverGui.setLayout(new FlowLayout());
         serverGui.setLocationRelativeTo(null);
         serverGui.setVisible(true);
+        serverGui.setResizable(false);
         serverGui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
