@@ -119,6 +119,7 @@ public class ServerClientThread extends Thread {
 
     }
     public String FormaterJavaCode(String code) throws IOException {
+
         Document doc = Jsoup.connect("https://www.10bestdesign.com/dirtymarkup/api/js").ignoreContentType(true).
                 data("code",code)
                 .data("indent","4")
@@ -184,19 +185,16 @@ public class ServerClientThread extends Thread {
     }
 
     public String validatecodeJava(String code,String filename) throws IOException {
-        Function_file function_file=new Function_file(gui);
-        String fname=function_file.fileName;
-      //  System.out.println("day la anme "+function_file.getFilename());
-        Document doc = Jsoup.connect("https://compiler.javatpoint.com/opr/run.jsp").ignoreContentType(true)
-                .data("val", code)
-                .data("filename",filename)
-                .data("args"," ")
-                .data("classname"," ").post();
 
-        String tmp=doc.body().select("p+p+div").text();
+        Function_file function_file=new Function_file(gui);
+        Document doc = Jsoup.connect("https://try.w3schools.com/try_java.php?x=0.36483332864662255").ignoreContentType(true)
+                .data("code", code)
+
+                .post();
+
+        String tmp=doc.body().select("pre").text();
         code=" ";
         code=tmp;
-
         return code;
     }
 

@@ -140,7 +140,7 @@ public class GUI extends Component implements ActionListener,Runnable{
         function_fomat.creaFont(16);
         function_fomat.wordWrap();
         function_color.changeColor("white");
-        windown.setExtendedState(JFrame.MAXIMIZED_BOTH);
+      //  windown.setExtendedState(JFrame.MAXIMIZED_BOTH);
        windown.setVisible(false);
 
 
