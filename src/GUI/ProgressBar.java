@@ -47,16 +47,16 @@ public class ProgressBar implements Runnable {
             while (i <= 100) {
                 // set text accoring to the level to which the bar is filled
                 if (i > 30 && i < 70)
-                    b.setString("wait for laoding program");
+                    b.setString(i+"%"+" Loading......");
                 else if (i > 70)
-                    b.setString("almost finished loading");
+                    b.setString(i+"%"+" Almost Loading Finished");
                 else
-                    b.setString("Program started");
+                    b.setString(i+"%"+" Program Stated");
                 // fill the menu bar
                 b.setValue(i + 10);
                 // delay the thread
-                Thread.sleep(5);
-                i += 1;
+                Thread.sleep(1000);
+                i += 10;
             }
             f.setVisible(false);
         } catch (Exception e) {
